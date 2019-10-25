@@ -19,41 +19,30 @@
  CHANGE BYTES BACK TO BYTES (NOT INT)
  */
 
-#ifndef EEPROM_Counter_h
-#define EEPROM_Counter_h
+#ifndef EEPROM_Logger_h
+#define EEPROM_Logger_h
 
 #include "Arduino.h"
+#include <EEPROM_Counter.h>
 
-class EEPROM_Counter {
+class EEPROM_Logger {
 public:
   // FUNTIONS:
-  EEPROM_Counter(int eepromMinAddress, int eepromMaxAddress, int numberOfValues);
-  void countOneUp(int valueNumber); // increases the value by one
-  void set(int valueNumber, long newValue); // sets value
-  long getValue(int valueNumber); // returns current value
-  void printDebugInformation(); // extensively prints what happens with the values
-  void setAllZero(); // resets all counters
+  EEPROM_Logger(int eepromMinAddress, int eepromMaxAddress, int numberOfValues);
+  //void countOneUp(int valueNumber);
+  // FUNTIONS:
+  //EEPROM_Logger(int eepromMinAddress, int eepromMaxAddress, int numberOfValues);
+
 
   // VARIABLES:
   // n.a.
 
 private:
   // FUNCTIONS:
-  long eepromRead(int sourceAdress);
-  void eepromWrite(long newValue, int destinationAddress);
-  void eepromMonitorWriteCycles();
-  void eepromMoveStorageLocation();
-  int calculateAddress(int valueNumber);
+
 
   // VARIABLES:
-  byte _bytesForWriteCounter=4;
-  int _storeLocation;
-  int _minValueStorelocation;
-  int _eepromMinAddress;
-  int _maxStoreLocation;
-  int _storeWriteCounterCounter;
-  int _numberOfValues;
-  long _numberOfWriteCycles;
+
 
 };
 #endif
