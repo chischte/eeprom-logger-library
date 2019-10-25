@@ -14,10 +14,9 @@
  address of the writecounter: _storeLocation (4bytes)
  address of value-n: _storelocation + n*sizeof(long)  
  * *****************************************************************************
- TODO:
- CLEAN UP THE WHOLE CODE
- CHANGE BYTES BACK TO BYTES (NOT INT)
  */
+
+
 
 #ifndef EEPROM_Logger_h
 #define EEPROM_Logger_h

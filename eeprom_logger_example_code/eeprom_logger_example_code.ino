@@ -15,15 +15,13 @@ int numberOfValues = endOfEnum;
 //
 //// IT IS POSSIBLE TO USE ONLY A RANGE OF THE EEPROM
 //// THIS CAN BE NECESSARY IF MORE THAN ONE FUNCTION REQUIRES ACCES TO A PART OF THE EEPROM
-//// THE ASSIGNED SIZE HAS TO BE AT LEAST (numberOfValues*4+6)bytes
+//// THE ASSIGNED SIZE HAS TO BE AT LEAST (numberOfValues*4+10)bytes
 //
 int eepromMinAddress = 200; // has to be 0 or bigger
 int eepromMaxAddress = 400; // has to be at least one smaller than the EEPROM size of the processor used
 //
 //// CREATE AN INSTANCE OF THE LIBRARY CLASS:
 EEPROM_Logger errorLogger(eepromMinAddress, eepromMaxAddress, numberOfValues);
-//EEPROM_Logger eepromLogger(3);
-//EEPROM_Logger eeprom_logger(5);
 void setup() {
   Serial.begin(115200);
   Serial.println("EXIT SETUP");
