@@ -2,6 +2,8 @@
 
 **Library to store logs on the non volatile Arduino EEPROM memory.**
 
+![alt text](documents/GraphicalOverview.jpg)
+
 Readme explanations and example code of the library handle the library as an error-log-library, the usage of the library is of course not limited to this purpose. 
 
 The "eeprom-logger-library" makes use of the "eeprom-counter-library" to handle the eeprom read/write commands and to take care that the memory has an evenly wear off and therefore a longer lifetime.
@@ -23,8 +25,6 @@ The 1st long is split into 1byte for the Error Code and 3 bytes for the time
 The 2nd long (4bytes) stores the cycle number. 
 
 An Additional long is used to store which slot is currently in use. 
-
-![alt text](documents/GraphicalOverview.jpg)
 
 6 additional bytes are used by the counter-library
 
