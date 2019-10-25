@@ -14,6 +14,11 @@
  address of the writecounter: _storeLocation (4bytes)
  address of value-n: _storelocation + n*sizeof(long)  
  * *****************************************************************************
+ * TODO / Notes
+ * KEEP TRACK OF THE 1st (oldest) LOG
+ * In the first run through the store slots, entry number 1 stays at storeslot no 1
+ * Afterwards if for example a value is stored on slot 5, the 1st log will be the one on slot 6
+ *
  */
 
 

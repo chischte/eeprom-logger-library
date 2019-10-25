@@ -7,7 +7,7 @@
  * *****************************************************************************
  */
 
-#include <EEPROM_Logger.h>
+#include "EEPROM_Logger.h"
 #include "Arduino.h"
 
 EEPROM_Logger::EEPROM_Logger(int eepromMinAddress, int eepromMaxAddress, int numberOfValues) {
