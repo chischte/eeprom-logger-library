@@ -26,18 +26,23 @@ An Additional long is used to store which slot is currently in use.
 
 ![alt text](documents/GraphicalOverview.jpg)
 
- 
+6 additional bytes are used by the counter-library
+
 **Memory requirements**
-Therefore to store 100 error logs, a total of 808 bytes is required 
-(100x8byte for the log entries plus 4 bytes to point to the current slot) 
- 
+
+Therefore to store 100 error logs, a total of 810 bytes is required: 
+
+	100 x 8bytes + 4 bytes     + 6 bytes 
+	log entries  + currentSlot + counter-library
+	
+   
 **Value Ranges** 
-*************************** 
-**error code**   256 possible codes
 
-**error time**   about 49 days if interpreted as seconds (millis overflow), about 4.7 hours if interpreted as milliseconds 
+error code:   256 possible codes
 
-**cycle number**     about 2 billion cycles (signed long) 
+error time:   about 49 days if interpreted as seconds (millis overflow), about 4.7 hours if interpreted as milliseconds 
+
+cycle number: about 2 billion cycles (signed long) 
  
 
 Library Functions
