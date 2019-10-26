@@ -20,10 +20,13 @@
 
 #include "Arduino.h"
 #include <EEPROM_Counter.h>
+// SET UP THE EEPROM COUNTER FOR 100 LOG ENTRIES:
+// 100*2 long for the log entrys + 1 log for the slotManager= 201 long values
 
 class EEPROM_Logger {
-public:
 
+public:
+//EEPROM_Counter eepromCounter(1001, 4095, 201);
   struct LogStruct {
     long logCycleNumber;
     long logCycleTime;
@@ -33,18 +36,24 @@ public:
   LogStruct newLog;
 
   // FUNTIONS:
-  LogStruct FunctionReturningStruct();
-  EEPROM_Logger(int eepromMinAddress, int eepromMaxAddress, int numberOfValues);
+  long eepromReadAndWrite(long value, long int);
+  LogStruct functionReturningStruct();
+  EEPROM_Logger(int eepromMinAddress, int eepromMaxAddress, int numberOfLogEntries);
 
   // VARIABLES:
 
 private:
   // FUNCTIONS:
-  void MergeTimeAndErrorCode(long errorTime, byte errorCode);
-  void SplitTimeAndErrorCode(long eepromTimeAndError);
+  void storeLog(long cycleNumber, long cycleTime, byte ErrorCode);
+  void mergeTimeAndErrorCode(long errorTime, byte errorCode);
+  void splitTimeAndErrorCode(long eepromTimeAndError);
 
   // VARIABLES:
   int _oldestErrorSlot = 1;
+  int _eepromMinAddress;
+  int _eepromMaxAddress;
+  int _eepromNumberOfLongs=1;
+  byte _oneForTheSlotManager=1;
 
 };
 #endif

@@ -17,45 +17,21 @@ enum logger {
 //
 int eepromMinAddress = 200; // has to be 0 or bigger
 int eepromMaxAddress = 400; // has to be at least one smaller than the EEPROM size of the processor used
+int numberOfErrorLogs=10;
 //
 //// CREATE AN INSTANCE OF THE LIBRARY CLASS:
-//EEPROM_Logger errorLogger(eepromMinAddress, eepromMaxAddress, numberOfValues);
+EEPROM_Logger errorLogger(eepromMinAddress, eepromMaxAddress, numberOfErrorLogs);
+
 
 /*
  long mergeLong(long ErrorTime, byte errorCode){
 
- }
-
  long splitLongErrorTime(long mergedLong){
- long errorTime;
-
  return errorTime;
 
- }
  byte splitLongErrorCode(long mergedLong) {
- byte errorCode;
- errorCode = mergedLong;
  return errorCode;
- }
  */
-
-//struct LogStruct {
-//  long logCycleNumber;
-//  long logCycleTime;
-//  byte logErrorCode;
-//};
-
-//struct LogStruct FunctionReturningStruct() {
-
-  //LogStruct currentLog;
-//  currentLog.logCycleNumber = 77;
-//  currentLog.logCycleTime = 88;
-//  currentLog.logErrorCode = 99;
-
- // return currentLog;
-
-//}
-//LogStruct newStruct;
 
 void setup() {
   Serial.begin(115200);
@@ -64,13 +40,14 @@ void setup() {
 
 void loop() {
 
-//  LogStruct structFromFunction;
-//  structFromFunction = FunctionReturningStruct();
-//
-//
-//  Serial.println(structFromFunction.logErrorCode);
-//  Serial.println(structFromFunction.logCycleTime);
-//  Serial.println(structFromFunction.logCycleNumber);
+  EEPROM_Logger::LogStruct structFromFunction;
+  //errorLogger.FunctionReturningStruct();
+  structFromFunction = errorLogger.functionReturningStruct();
+
+
+  Serial.println(structFromFunction.logErrorCode);
+  Serial.println(structFromFunction.logCycleTime);
+  Serial.println(structFromFunction.logCycleNumber);
 
   /*
    long errorTime=981981;

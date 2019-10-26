@@ -1,5 +1,7 @@
 # eeprom-logger-library 
 
+CURRENTLY THE LIBRARY USES A FIXED EEPROM RANGE FROM ADDRESS 1001 to 4095
+
 **Library to store logs on the non volatile Arduino EEPROM memory.**
 
 ![alt text](documents/GraphicalOverview.jpg)
@@ -35,7 +37,6 @@ Therefore to store 100 error logs, a total of 810 bytes is required:
 	100 x 8bytes + 4 bytes     + 6 bytes 
 	log entries  + currentSlot + counter-library
 	
-   
 **Value Ranges** 
 
 error code:   256 possible codes
