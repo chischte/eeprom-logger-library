@@ -2,12 +2,10 @@
 //#include <EEPROM_Counter.h> //https://github.com/chischte/eeprom-counter-library.git
 //// NAME THE VALUES TO BE STORED ON EEPROM BY ENTERING THEM IN THE LIST BELOW:
 enum logger {
-toolResetError,    // example value name
-timeoutError,   // example value name
- endOfEnum           // add additional values before this one...
-                      // ...this has to be the last one!
+  toolResetError,    // example value name
+  timeoutError   // example value name
 };
-int numberOfValues = endOfEnum;
+
 //
 //// DEFINE THE EEPROM SIZE OF YOUR BOARD:
 //// EEPROM size Arduino Nano/Uno: 1024 bytes (ATmega328P) -> maxAddress = 1023
@@ -21,13 +19,69 @@ int eepromMinAddress = 200; // has to be 0 or bigger
 int eepromMaxAddress = 400; // has to be at least one smaller than the EEPROM size of the processor used
 //
 //// CREATE AN INSTANCE OF THE LIBRARY CLASS:
-EEPROM_Logger errorLogger(eepromMinAddress, eepromMaxAddress, numberOfValues);
+//EEPROM_Logger errorLogger(eepromMinAddress, eepromMaxAddress, numberOfValues);
+
+/*
+ long mergeLong(long ErrorTime, byte errorCode){
+
+ }
+
+ long splitLongErrorTime(long mergedLong){
+ long errorTime;
+
+ return errorTime;
+
+ }
+ byte splitLongErrorCode(long mergedLong) {
+ byte errorCode;
+ errorCode = mergedLong;
+ return errorCode;
+ }
+ */
+
+//struct LogStruct {
+//  long logCycleNumber;
+//  long logCycleTime;
+//  byte logErrorCode;
+//};
+
+//struct LogStruct FunctionReturningStruct() {
+
+  //LogStruct currentLog;
+//  currentLog.logCycleNumber = 77;
+//  currentLog.logCycleTime = 88;
+//  currentLog.logErrorCode = 99;
+
+ // return currentLog;
+
+//}
+//LogStruct newStruct;
+
 void setup() {
   Serial.begin(115200);
   Serial.println("EXIT SETUP");
 }
 
 void loop() {
+
+//  LogStruct structFromFunction;
+//  structFromFunction = FunctionReturningStruct();
+//
+//
+//  Serial.println(structFromFunction.logErrorCode);
+//  Serial.println(structFromFunction.logCycleTime);
+//  Serial.println(structFromFunction.logCycleNumber);
+
+  /*
+   long errorTime=981981;
+   byte errorCode=222;
+
+   long mergedLong=(errorTime<<8)|errorCode;
+
+   byte splitErrorCode=mergedLong;
+   unsigned long splitErrorTime=mergedLong>>8;
+   */
+  delay(5000);
 
 //  //exampleCounter.setAllZero(); //sets all values to zero
 //

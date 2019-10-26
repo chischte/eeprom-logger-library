@@ -21,8 +21,6 @@
  *
  */
 
-
-
 #ifndef EEPROM_Logger_h
 #define EEPROM_Logger_h
 
@@ -33,20 +31,24 @@ class EEPROM_Logger {
 public:
   // FUNTIONS:
   EEPROM_Logger(int eepromMinAddress, int eepromMaxAddress, int numberOfValues);
-  //void countOneUp(int valueNumber);
-  // FUNTIONS:
-  //EEPROM_Logger(int eepromMinAddress, int eepromMaxAddress, int numberOfValues);
-
+  //struct logData getLogData(int logNumber);
+  struct LogStruct FunctionReturningStruct();
 
   // VARIABLES:
-  // n.a.
+  struct LogStruct {
+    long logCycleNumber;
+    long logCycleTime;
+    byte logErrorCode;
+  };
+  LogStruct newStruct;
 
 private:
   // FUNCTIONS:
-
+  void MergeTimeAndErrorCode(long errorTime, byte errorCode);
+  void SplitTimeAndErrorCode(long eepromTimeAndError);
 
   // VARIABLES:
-
+  int _oldestErrorSlot = 1;
 
 };
 #endif
