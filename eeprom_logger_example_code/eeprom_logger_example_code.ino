@@ -17,11 +17,10 @@ enum logger {
 //
 int eepromMinAddress = 200; // has to be 0 or bigger
 int eepromMaxAddress = 400; // has to be at least one smaller than the EEPROM size of the processor used
-int numberOfErrorLogs=10;
+int numberOfErrorLogs = 10;
 //
 //// CREATE AN INSTANCE OF THE LIBRARY CLASS:
-EEPROM_Logger errorLogger(eepromMinAddress, eepromMaxAddress, numberOfErrorLogs);
-
+EEPROM_Logger errorLogger;
 
 /*
  long mergeLong(long ErrorTime, byte errorCode){
@@ -33,31 +32,33 @@ EEPROM_Logger errorLogger(eepromMinAddress, eepromMaxAddress, numberOfErrorLogs)
  return errorCode;
  */
 
+void printLogEntry(int logEntryNumber) {
+  EEPROM_Logger::LogStruct structFromFunction;
+  structFromFunction = errorLogger.readLog(logEntryNumber);
+  String errorCode[] = { "reset", "timeout" };
+  Serial.print("Zaehlerstand: ");
+  Serial.print(structFromFunction.logCycleNumber);
+  Serial.print("  Zeit: ");
+  Serial.print(structFromFunction.logCycleTime);
+  Serial.print("min ");
+  Serial.print("  Fehler:");
+  Serial.println(errorCode[structFromFunction.logErrorCode]);
+}
+
 void setup() {
+  errorLogger.setup(eepromMinAddress, eepromMaxAddress, numberOfErrorLogs);
   Serial.begin(115200);
   Serial.println("EXIT SETUP");
 }
 
 void loop() {
 
-  EEPROM_Logger::LogStruct structFromFunction;
-  //errorLogger.FunctionReturningStruct();
-  structFromFunction = errorLogger.functionReturningStruct();
+  errorLogger.writeLog(6868, 300, 1);
+  errorLogger.writeLog(670, 350, 0);
 
-
-  Serial.println(structFromFunction.logErrorCode);
-  Serial.println(structFromFunction.logCycleTime);
-  Serial.println(structFromFunction.logCycleNumber);
-
-  /*
-   long errorTime=981981;
-   byte errorCode=222;
-
-   long mergedLong=(errorTime<<8)|errorCode;
-
-   byte splitErrorCode=mergedLong;
-   unsigned long splitErrorTime=mergedLong>>8;
-   */
+  printLogEntry(1);
+  printLogEntry(2);
+  Serial.println("");
   delay(5000);
 
 //  //exampleCounter.setAllZero(); //sets all values to zero

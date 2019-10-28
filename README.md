@@ -1,6 +1,6 @@
 # eeprom-logger-library 
 
-CURRENTLY THE LIBRARY USES A FIXED EEPROM RANGE FROM ADDRESS 1001 to 4095
+*** LIBRARY UNDER CONSTRUCTION, README TO BE CHECKED WHEN CODE IS WORKING PROPERLY ***
 
 **Library to store logs on the non volatile Arduino EEPROM memory.**
 
