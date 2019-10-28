@@ -10,11 +10,8 @@
  // * *****************************************************************************
  * TODO / Notes
  * Measures if a new board is used, overwrite impossible entries
- * clear all logs function
- * KEEP TRACK OF THE 1st (oldest) LOG
- * In the first run through the store slots, entry number 1 stays at storeslot no 1
- * Afterwards if for example a value is stored on slot 5, the 1st log will be the one on slot 6
- *
+ * INTEGRATE A BOOL IN THE MERGED LOG MANAGER TO KEEP TRACK IF EVERY
+ * LOG HAS BEEN OCCUPIED!
  */
 
 #ifndef EEPROM_Logger_h
@@ -49,7 +46,8 @@ private:
   // FUNCTIONS:
   void switchToNextLog();
   int calculateCurrentCounterNumber(int currentLogNumber);
-  int getCurrentLogNumber();
+  int getNoOfNextLog();
+  long getNoOfFirstLog();
   //******************************************************************************
   // MERGE FUNCTIONS:
   //******************************************************************************
@@ -66,6 +64,7 @@ private:
 
   // VARIABLES:
   int _numberOfLogEntries = 0;
+  int _maxLogNumber=0;
   int _addressOfLogManager = 0;
   byte _longForSlotManager = 1;
   bool _everyLogOccupied = false;

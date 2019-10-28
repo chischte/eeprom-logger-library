@@ -15,18 +15,18 @@ EEPROM_Logger::EEPROM_Logger() {
 
 void EEPROM_Logger::setup(int eepromMinAddress, int eepromMaxAddress, int numberOfLogEntries) {
   _numberOfLogEntries = numberOfLogEntries;
+  _maxLogNumber = _numberOfLogEntries - 1;
   byte longSizeOfAnEntry = 2;
 
   // EVERY LOG ENTRY REQUIRES TWO LONG VARIABLES, AN ADDITIONAL LONG IS USED FOR THE SLOT MANAGER
   int eepromNumberOfLongs = _numberOfLogEntries * longSizeOfAnEntry + _longForSlotManager;
 
-  //SET UP THE EEPROM COUNTER:
+  // SET UP THE EEPROM COUNTER:
   eepromCounter.setup(eepromMinAddress, eepromMaxAddress, eepromNumberOfLongs);
 
-  // GET THE mergedLogManager-long:
-  long mergedLogManager = eepromCounter.getValue(_addressOfLogManager);
-  int noOfFirstLog = unmergeNoOfFirstLog(mergedLogManager);
-  int noOfCurrentLog = unmergeNoOfCurrentLog(mergedLogManager);
+  // GET THE mergedLogManager VALUES:
+  int noOfFirstLog = getNoOfFirstLog();
+  int noOfCurrentLog = getNoOfNextLog();
 
   // CHECK IF LOG MANAGER CONTAINS VALID VALUES:
   bool outOfValidRange = 0;
@@ -36,31 +36,30 @@ void EEPROM_Logger::setup(int eepromMinAddress, int eepromMaxAddress, int number
   if (noOfCurrentLog < 0 || noOfCurrentLog > (_numberOfLogEntries)) {
     outOfValidRange = true;
   }
-
   // IF NOT (NEW SETUP OR NEW BOARD) CLEAR THE WHOLE MEMORY:
   if (outOfValidRange) {
     eepromCounter.setAllZero();
   }
-
-  // GET THE mergedLogManager-long:
-  mergedLogManager = eepromCounter.getValue(_addressOfLogManager);
-  noOfFirstLog = unmergeNoOfFirstLog(mergedLogManager);
-  noOfCurrentLog = unmergeNoOfCurrentLog(mergedLogManager);
+  // GET THE mergedLogManager VALUES:
+  noOfFirstLog = getNoOfFirstLog();
+  noOfCurrentLog = getNoOfNextLog();
 
   // IF THE FIRST LOG IS NOT LOG 0, EVERY LOG HAS BEEN OCCUPIED:
-
-  // ...IS THIS ALWAYS CORRECT?????
-
   if (noOfCurrentLog != 0) {
     _everyLogOccupied = true;
   }
-
 }
 
-int EEPROM_Logger::getCurrentLogNumber() {
+int EEPROM_Logger::getNoOfNextLog() {
   long mergedLogManager = eepromCounter.getValue(_addressOfLogManager);
   int currentLogNumber = unmergeNoOfCurrentLog(mergedLogManager);
   return currentLogNumber;
+}
+
+long EEPROM_Logger::getNoOfFirstLog() {
+  long mergedLogManager = eepromCounter.getValue(_addressOfLogManager);
+  int noOfFirstLog = unmergeNoOfFirstLog(mergedLogManager);
+  return noOfFirstLog;
 }
 
 int EEPROM_Logger::calculateCurrentCounterNumber(int currentLogNumber) {
@@ -71,26 +70,28 @@ int EEPROM_Logger::calculateCurrentCounterNumber(int currentLogNumber) {
 }
 
 void EEPROM_Logger::switchToNextLog() {
-  long mergedLogManager = eepromCounter.getValue(_addressOfLogManager);
-  int noOfFirstLog = unmergeNoOfFirstLog(mergedLogManager);
-  int noOfCurrentLog = unmergeNoOfCurrentLog(mergedLogManager);
-  noOfCurrentLog++;
-  if (noOfCurrentLog > (_numberOfLogEntries - 1)) {
-    noOfCurrentLog = 0;
+  int noOfFirstLog = getNoOfFirstLog();
+  int noOfNextLog = getNoOfNextLog();
+  noOfNextLog++;
+
+  if (noOfNextLog > _maxLogNumber) {
+    noOfNextLog = 0;
     _everyLogOccupied = true;
   }
   if (_everyLogOccupied == true) {
-    noOfFirstLog = noOfCurrentLog + 1;
+    noOfFirstLog = noOfNextLog;
+    if (noOfFirstLog > _maxLogNumber) {
+      noOfFirstLog = 0;
+    }
   }
-
-  mergedLogManager = mergeLogManger(noOfFirstLog, noOfCurrentLog);
+  long mergedLogManager = mergeLogManger(noOfFirstLog, noOfNextLog);
   eepromCounter.set(_addressOfLogManager, mergedLogManager);
 }
 
 void EEPROM_Logger::writeLog(long cycleNumber, long logTime, byte errorCode) {
 
   // CALCULATE CURRENT COUNTER ADDRESS:
-  int currentCounterAddress = calculateCurrentCounterNumber(getCurrentLogNumber());
+  int currentCounterAddress = calculateCurrentCounterNumber(getNoOfNextLog());
 
   // STORE CYCLE NUMBER TO CURRENT SLOT:
   eepromCounter.set(currentCounterAddress, cycleNumber);
@@ -104,11 +105,15 @@ void EEPROM_Logger::writeLog(long cycleNumber, long logTime, byte errorCode) {
 
 EEPROM_Logger::LogStruct EEPROM_Logger::readLog(int logNumber) {
 
+  logNumber = getNoOfFirstLog() + logNumber;
+  if (logNumber > _maxLogNumber) {
+    logNumber -= (_maxLogNumber + 1);
+  }
   // CALCULATE COUNTER ADDRESS:
   int currentCounterAddress = calculateCurrentCounterNumber(logNumber);
 
   // GET CYCLE NUMBER:
-  int cycleNumber = eepromCounter.getValue(logNumber);
+  long cycleNumber = eepromCounter.getValue(currentCounterAddress);
   currentCounterAddress++;
 
   // GET MERGED TIME AND ERROR CODE LONG:
@@ -122,8 +127,6 @@ EEPROM_Logger::LogStruct EEPROM_Logger::readLog(int logNumber) {
   newLog.logCycleNumber = cycleNumber;
   newLog.logCycleTime = cycleTime;
   newLog.logErrorCode = errorCode;
-
-  //eepromCounter.printDebugInformation();
 
   // RETURN THE VALUES:
   return newLog;
@@ -142,7 +145,6 @@ long EEPROM_Logger::mergeLogManger(int noOfFirstLog, int noOfCurrentLog) {
   mergedLogManager = mergedLogManager << 16 | noOfCurrentLog;
   return mergedLogManager;
 }
-
 //******************************************************************************
 // UNMERGE FUNCTIONS:
 //******************************************************************************
@@ -166,7 +168,6 @@ int EEPROM_Logger::unmergeNoOfCurrentLog(long mergedLogManager) {
   return noOfCurrentLog;
 }
 //******************************************************************************
-
 void EEPROM_Logger::setAllZero() {
   eepromCounter.setAllZero();
   _everyLogOccupied = false;
