@@ -37,23 +37,24 @@ public:
   LogStruct newLog;
 
   // FUNTIONS:
-  void writeLog(long cycleNumber, long cycleTime, byte errorCode);
-  LogStruct readLog(int logNumber);
   EEPROM_Logger();
+  void writeLog(long cycleNumber, long logTime, byte errorCode);
+  LogStruct readLog(int logNumber);
   void setup(int eepromMinAddress, int eepromMaxAddress, int numberOfLogEntries);
+  void setAllZero();
+
   // VARIABLES:
 
 private:
   // FUNCTIONS:
-
-
-  int calculateCurrent
+  void switchToNextLog();
+  int calculateCurrentCounterNumber(int currentLogNumber);
+  int getCurrentLogNumber();
   //******************************************************************************
   // MERGE FUNCTIONS:
   //******************************************************************************
   long mergeTimeAndErrorCode(long logTime, byte errorCode);
   long mergeLogManger(int noOfFirstLog, int noOfCurrentLog);
-
   //******************************************************************************
   // UNMERGE FUNCTIONS:
   //******************************************************************************
@@ -63,15 +64,10 @@ private:
   int unmergeNoOfCurrentLog(long mergedLogManager);
   //******************************************************************************
 
-
   // VARIABLES:
-  int _addressOfSlotManager=0;
-
-  int _eepromNumberOfLongs = 1;
-  int _numberOfLogEntries=0;
-  byte _oneForTheSlotManager = 1;
-
-
-
+  int _numberOfLogEntries = 0;
+  int _addressOfLogManager = 0;
+  byte _longForSlotManager = 1;
+  bool _everyLogOccupied = false;
 };
 #endif

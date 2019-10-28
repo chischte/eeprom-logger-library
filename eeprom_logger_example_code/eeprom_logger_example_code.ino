@@ -15,6 +15,7 @@ enum logger {
 //// THIS CAN BE NECESSARY IF MORE THAN ONE FUNCTION REQUIRES ACCES TO A PART OF THE EEPROM
 //// THE ASSIGNED SIZE HAS TO BE AT LEAST ((numberOfValues*8)+10)bytes
 //
+
 int eepromMinAddress = 200; // has to be 0 or bigger
 int eepromMaxAddress = 300; // has to be at least one smaller than the EEPROM size of the processor used
 int numberOfErrorLogs = 10;
@@ -34,6 +35,7 @@ EEPROM_Logger errorLogger;
 
 void printLogEntry(int firstLog, int lastLog) {
   for (int i = firstLog; i < lastLog; i++) {
+
     EEPROM_Logger::LogStruct structFromFunction;
     structFromFunction = errorLogger.readLog(i);
     String errorCode[] = { "reset", "timeout" };
@@ -45,6 +47,7 @@ void printLogEntry(int firstLog, int lastLog) {
     Serial.print("  Fehler:");
     Serial.println(errorCode[structFromFunction.logErrorCode]);
   }
+  Serial.println(" ");
 }
 
 void setup() {
@@ -55,29 +58,28 @@ void setup() {
 
 void loop() {
 
-  errorLogger.writeLog(6868, 300, 1);
-  errorLogger.writeLog(670, 350, 0);
+  errorLogger.setAllZero();
 
-  //printLogEntry(0, (numberOfErrorLogs - 1));
-  printLogEntry(0, 1);
-  Serial.println("");
+  // GENERATE VALUES FOR THE LOGGER:
+  static int cycleNumber = 0;
+  cycleNumber++;
+
+  static int logTime = 0;
+  logTime = logTime + 5;
+
+  static byte errorCode = 0;
+  if (errorCode == 0) {
+    errorCode = 1;
+  } else {
+    errorCode = 0;
+  }
+
+  // WRITE LOG:
+  errorLogger.writeLog(cycleNumber, logTime, errorCode);
+
+  // PRINT OUT ALL LOGS:
+  printLogEntry(0, (numberOfErrorLogs - 1));
+  //printLogEntry(0, 1);
+
   delay(5000);
-
-//  //exampleCounter.setAllZero(); //sets all values to zero
-//
-//  for (int i = 0; i < 5; i++) {
-//    exampleCounter.countOneUp(longTimeCounter);
-//  }
-//  exampleCounter.countOneUp(shortTimeCounter);
-//
-//  exampleCounter.countOneUp(toolIdentNumber);
-//
-//  exampleCounter.set(somethingElse, 112233);
-//
-//  long ValueFromGetValue = exampleCounter.getValue(longTimeCounter);
-//  Serial.print("Value from getValue Function: ");
-//  Serial.println(ValueFromGetValue);
-//  exampleCounter.printDebugInformation();
-//  delay(1000);
-
 }
