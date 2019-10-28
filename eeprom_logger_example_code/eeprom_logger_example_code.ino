@@ -13,10 +13,10 @@ enum logger {
 //
 //// IT IS POSSIBLE TO USE ONLY A RANGE OF THE EEPROM
 //// THIS CAN BE NECESSARY IF MORE THAN ONE FUNCTION REQUIRES ACCES TO A PART OF THE EEPROM
-//// THE ASSIGNED SIZE HAS TO BE AT LEAST (numberOfValues*4+10)bytes
+//// THE ASSIGNED SIZE HAS TO BE AT LEAST ((numberOfValues*8)+10)bytes
 //
 int eepromMinAddress = 200; // has to be 0 or bigger
-int eepromMaxAddress = 400; // has to be at least one smaller than the EEPROM size of the processor used
+int eepromMaxAddress = 300; // has to be at least one smaller than the EEPROM size of the processor used
 int numberOfErrorLogs = 10;
 //
 //// CREATE AN INSTANCE OF THE LIBRARY CLASS:
@@ -32,17 +32,19 @@ EEPROM_Logger errorLogger;
  return errorCode;
  */
 
-void printLogEntry(int logEntryNumber) {
-  EEPROM_Logger::LogStruct structFromFunction;
-  structFromFunction = errorLogger.readLog(logEntryNumber);
-  String errorCode[] = { "reset", "timeout" };
-  Serial.print("Zaehlerstand: ");
-  Serial.print(structFromFunction.logCycleNumber);
-  Serial.print("  Zeit: ");
-  Serial.print(structFromFunction.logCycleTime);
-  Serial.print("min ");
-  Serial.print("  Fehler:");
-  Serial.println(errorCode[structFromFunction.logErrorCode]);
+void printLogEntry(int firstLog, int lastLog) {
+  for (int i = firstLog; i < lastLog; i++) {
+    EEPROM_Logger::LogStruct structFromFunction;
+    structFromFunction = errorLogger.readLog(i);
+    String errorCode[] = { "reset", "timeout" };
+    Serial.print("Zaehlerstand: ");
+    Serial.print(structFromFunction.logCycleNumber);
+    Serial.print("  Zeit: ");
+    Serial.print(structFromFunction.logCycleTime);
+    Serial.print("min ");
+    Serial.print("  Fehler:");
+    Serial.println(errorCode[structFromFunction.logErrorCode]);
+  }
 }
 
 void setup() {
@@ -56,8 +58,8 @@ void loop() {
   errorLogger.writeLog(6868, 300, 1);
   errorLogger.writeLog(670, 350, 0);
 
-  printLogEntry(1);
-  printLogEntry(2);
+  //printLogEntry(0, (numberOfErrorLogs - 1));
+  printLogEntry(0, 1);
   Serial.println("");
   delay(5000);
 

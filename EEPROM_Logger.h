@@ -45,14 +45,33 @@ public:
 
 private:
   // FUNCTIONS:
-  void mergeTimeAndErrorCode(long errorTime, byte errorCode);
-  void splitTimeAndErrorCode(long eepromTimeAndError);
+
+
+  int calculateCurrent
+  //******************************************************************************
+  // MERGE FUNCTIONS:
+  //******************************************************************************
+  long mergeTimeAndErrorCode(long logTime, byte errorCode);
+  long mergeLogManger(int noOfFirstLog, int noOfCurrentLog);
+
+  //******************************************************************************
+  // UNMERGE FUNCTIONS:
+  //******************************************************************************
+  byte unmergeErrorCode(long mergedTimeAndCode);
+  long unmergeTime(long mergedTimeAndCode);
+  int unmergeNoOfFirstLog(long mergedLogManager);
+  int unmergeNoOfCurrentLog(long mergedLogManager);
+  //******************************************************************************
+
 
   // VARIABLES:
   int _addressOfSlotManager=0;
 
   int _eepromNumberOfLongs = 1;
+  int _numberOfLogEntries=0;
   byte _oneForTheSlotManager = 1;
+
+
 
 };
 #endif
