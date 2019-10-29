@@ -44,10 +44,26 @@ void EEPROM_Logger::setup(int eepromMinAddress, int eepromMaxAddress, int number
   noOfFirstLog = getNoOfFirstLog();
   noOfCurrentLog = getNoOfNextLog();
 
-  // IF THE FIRST LOG IS NOT LOG 0, EVERY LOG HAS BEEN OCCUPIED:
-  if (noOfCurrentLog != 0) {
-    _everyLogOccupied = true;
+  _everyLogOccupied = checkEntryInLastSlot();
+}
+
+bool EEPROM_Logger::checkEntryInLastSlot() {
+  bool entryDetected = 0;
+  // IF THE LAST LOG SLOT IS NOT 0, EVERY LOG HAS BEEN OCCUPIED:
+  // CALCULATE COUNTER ADDRESS:
+  int currentCounterAddress = calculateCurrentCounterNumber(_maxLogNumber);
+
+// GET CYCLE NUMBER:
+  long cycleNumber = eepromCounter.getValue(currentCounterAddress);
+  currentCounterAddress++;
+
+// GET MERGED TIME AND ERROR CODE LONG:
+  long mergedTimeAndCode = eepromCounter.getValue(currentCounterAddress);
+
+  if (cycleNumber != 0 && mergedTimeAndCode != 0) {
+    entryDetected = true;
   }
+  return entryDetected;
 }
 
 int EEPROM_Logger::getNoOfNextLog() {
@@ -109,6 +125,7 @@ EEPROM_Logger::LogStruct EEPROM_Logger::readLog(int logNumber) {
   if (logNumber > _maxLogNumber) {
     logNumber -= (_maxLogNumber + 1);
   }
+
   // CALCULATE COUNTER ADDRESS:
   int currentCounterAddress = calculateCurrentCounterNumber(logNumber);
 
@@ -171,4 +188,20 @@ int EEPROM_Logger::unmergeNoOfCurrentLog(long mergedLogManager) {
 void EEPROM_Logger::setAllZero() {
   eepromCounter.setAllZero();
   _everyLogOccupied = false;
+}
+
+void EEPROM_Logger::printAllLogs() {
+  for (int i = 0; i < _maxLogNumber; i++) {
+    LogStruct structFromFunction;
+    structFromFunction = readLog(i);
+    String errorCode[] = { "n.a.", "reset", "timeout" };
+    Serial.print("Zaehlerstand: ");
+    Serial.print(structFromFunction.logCycleNumber);
+    Serial.print("  Zeit: ");
+    Serial.print(structFromFunction.logCycleTime);
+    Serial.print("min ");
+    Serial.print(" Fehler: ");
+    Serial.println(errorCode[structFromFunction.logErrorCode]);
+  }
+  Serial.println();
 }

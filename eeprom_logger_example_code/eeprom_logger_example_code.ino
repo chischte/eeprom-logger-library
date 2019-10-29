@@ -2,8 +2,9 @@
 
 // NAME THE VALUES TO BE STORED ON EEPROM BY ENTERING THEM IN THE LIST BELOW:
 enum logger {
-  toolResetError,    // example value name
-  timeoutError   // example value name
+  emptyLog,        // marks empty logs
+  toolResetError,  // example value name
+  timeoutError     // example value name
 };
 
 // DEFINE THE EEPROM SIZE OF YOUR BOARD:
@@ -13,25 +14,22 @@ enum logger {
 // THE ASSIGNED SIZE HAS TO BE AT LEAST ((numberOfValues*8)+10)bytes, THE MORE, THE BETTER
 int eepromMinAddress = 0; // has to be 0 or bigger
 int eepromMaxAddress = 1023; // has to be at least one smaller than the EEPROM size of the processor used
-int numberOfErrorLogs = 10;
+int numberOfErrorLogs = 5;
 
 // CREATE AN INSTANCE OF THE LIBRARY CLASS:
 EEPROM_Logger errorLogger;
 
-void printLogEntry(int firstLog, int lastLog) {
-  for (int i = firstLog; i <= lastLog; i++) {
-    EEPROM_Logger::LogStruct structFromFunction;
-    structFromFunction = errorLogger.readLog(i);
-    String errorCode[] = { "reset", "timeout" };
-    Serial.print("Zaehlerstand: ");
-    Serial.print(structFromFunction.logCycleNumber);
-    Serial.print("  Zeit: ");
-    Serial.print(structFromFunction.logCycleTime);
-    Serial.print("min ");
-    Serial.print(" Fehler: ");
-    Serial.println(errorCode[structFromFunction.logErrorCode]);
-  }
-  Serial.println(" ");
+void printLogEntry(int logNumber) {
+  EEPROM_Logger::LogStruct structFromFunction;
+  structFromFunction = errorLogger.readLog(logNumber);
+  String errorCode[] = { "n.a.", "reset", "timeout" };
+  Serial.print("Zaehlerstand: ");
+  Serial.print(structFromFunction.logCycleNumber);
+  Serial.print("  Zeit: ");
+  Serial.print(structFromFunction.logCycleTime);
+  Serial.print("min ");
+  Serial.print(" Fehler: ");
+  Serial.println(errorCode[structFromFunction.logErrorCode]);
 }
 
 void setup() {
@@ -53,17 +51,21 @@ void loop() {
   logTime = logTime + 1;
 
   static byte errorCode = 1;
-  if (errorCode == 0) {
-    errorCode = 1;
+  if (errorCode == 1) {
+    errorCode = 2;
   } else {
-    errorCode = 0;
+    errorCode = 1;
   }
 
   // WRITE LOG:
   errorLogger.writeLog(cycleNumber, logTime, errorCode);
 
-  // PRINT OUT ALL LOGS:
-  printLogEntry(0, (numberOfErrorLogs - 1));
+  // PRINT A LOG ENTRY:
+  int logNumber = 3;
+  printLogEntry(logNumber);
+  Serial.println();
+  // PRINT ALL LOG ENTRIES:
+  errorLogger.printAllLogs();
 
   delay(2000);
 }

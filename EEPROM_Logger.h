@@ -39,6 +39,7 @@ public:
   LogStruct readLog(int logNumber);
   void setup(int eepromMinAddress, int eepromMaxAddress, int numberOfLogEntries);
   void setAllZero();
+  void printAllLogs();
 
   // VARIABLES:
 
@@ -48,6 +49,7 @@ private:
   int calculateCurrentCounterNumber(int currentLogNumber);
   int getNoOfNextLog();
   long getNoOfFirstLog();
+  bool checkEntryInLastSlot();
   //******************************************************************************
   // MERGE FUNCTIONS:
   //******************************************************************************
@@ -64,7 +66,7 @@ private:
 
   // VARIABLES:
   int _numberOfLogEntries = 0;
-  int _maxLogNumber=0;
+  int _maxLogNumber = 0;
   int _addressOfLogManager = 0;
   byte _longForSlotManager = 1;
   bool _everyLogOccupied = false;

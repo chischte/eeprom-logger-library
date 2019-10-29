@@ -1,12 +1,13 @@
 # eeprom-logger-library 
 
-*** LIBRARY UNDER CONSTRUCTION, README TO BE CHECKED WHEN CODE IS WORKING PROPERLY ***
+**REPLACE "noOfCurrentLog" WITH "noOfNextLog"**
+**UPDATE README WITH LIBRARY FUNCTIONS**
 
 **Library to store logs on the non volatile Arduino EEPROM memory.**
 
 ![alt text](documents/GraphicalOverview.jpg)
 
-Readme explanations and example code of the library handle the library as an error-log-library, the usage of the library is of course not limited to this purpose. 
+The library was written to log errors of a Controllino PLC controlled test rig.
 
 The "eeprom-logger-library" makes use of the "eeprom-counter-library" to handle the eeprom read/write commands and to take care that the memory has an evenly wear off and therefore a longer lifetime.
 Additional information regarding the eeprom-counter-library can be found here:
@@ -22,24 +23,24 @@ errorTime  ...at what time since the last reset did the error happen
 **Memory usage** 
 Each error entry takes up 2 long values = 8 bytes. 
  
-The 1st long is split into 1byte for the Error Code and 3 bytes for the time 
+The 1nd long (4bytes) stores the cycle number. 
 
-The 2nd long (4bytes) stores the cycle number. 
+The 2nd long is split into 1 byte for the Error Code and 3 bytes for the time.
 
-An Additional long is used to store which slot is currently in use. 
+An Additional long is used to store which slot will be written next and which slot stores the oldest log. 
 
 6 additional bytes are used by the counter-library
 
 **Memory requirements**
 
-Therefore to store 100 error logs, a total of 810 bytes is required: 
+Therefore to store for example 100 error logs, a total of 810 bytes is required: 
 
-	100 x 8bytes + 4 bytes     + 6 bytes 
-	log entries  + currentSlot + counter-library
+	100 x 8bytes + 2 bytes      + 2 bytes     + 6 bytes 
+	log entries  + noOfFirstLog + noOfNextLog + required by the counter-library
 	
 **Value Ranges** 
 
-error code:   256 possible codes
+error code:   255 possible codes (1-255), code 0 is reserved to mark empty logs
 
 error time:   about 49 days if interpreted as seconds (millis overflow), about 4.7 hours if interpreted as milliseconds 
 
@@ -58,3 +59,5 @@ Library Functions
 Installation
 ------------
 The Library can be installed by cloning or downloading it to Arduinos default library location, e.g. user/documents/Arduino/libraries/.
+
+The eeprom-counter library (https://github.com/chischte/eeprom-counter-library.git) has to be installed as well.
