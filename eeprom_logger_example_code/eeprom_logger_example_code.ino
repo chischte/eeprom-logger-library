@@ -22,7 +22,8 @@ EEPROM_Logger errorLogger;
 void printLogEntry(int logNumber) {
   EEPROM_Logger::LogStruct structFromFunction;
   structFromFunction = errorLogger.readLog(logNumber);
-  String errorCode[] = { "n.a.", "reset", "timeout" };
+  // THIS STRING IS MANUALLY COPIED OUT OF THE EEPROM_Logger.cpp FILE:
+  String errorCode[] = { "n.a.", "reset", "shortTimeout", "longTimeout", "shutDown" };
   Serial.print("Zaehlerstand: ");
   Serial.print(structFromFunction.logCycleNumber);
   Serial.print("  Zeit: ");
