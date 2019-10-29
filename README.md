@@ -1,6 +1,5 @@
 # eeprom-logger-library 
 
-**REPLACE "noOfCurrentLog" WITH "noOfNextLog"**
 **UPDATE README WITH LIBRARY FUNCTIONS**
 
 **Library to store logs on the non volatile Arduino EEPROM memory.**
