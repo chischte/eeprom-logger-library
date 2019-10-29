@@ -30,10 +30,10 @@ void EEPROM_Logger::setup(int eepromMinAddress, int eepromMaxAddress, int number
 
   // CHECK IF LOG MANAGER CONTAINS VALID VALUES:
   bool outOfValidRange = 0;
-  if (noOfFirstLog < 0 || noOfFirstLog > (_numberOfLogEntries - 1)) {
+  if (noOfFirstLog < 0 || noOfFirstLog > (_maxLogNumber)) {
     outOfValidRange = true;
   }
-  if (noOfCurrentLog < 0 || noOfCurrentLog > (_numberOfLogEntries)) {
+  if (noOfCurrentLog < 0 || noOfCurrentLog > (_maxLogNumber)) {
     outOfValidRange = true;
   }
   // IF NOT (NEW SETUP OR NEW BOARD) CLEAR THE WHOLE MEMORY:
