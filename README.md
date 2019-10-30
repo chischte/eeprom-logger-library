@@ -1,7 +1,13 @@
 # eeprom-logger-library 
 
+**TODO:**
+
 **UPDATE README WITH LIBRARY FUNCTIONS**
+
+**UPDATE README WITH ERROR CODE NAMES (e.g. 00=emptyLog 01=timeout...)
+
 **UPDATE PRINT FUNCTION WITH min/sec instead of only min**
+
 
 **Library to store logs on the non volatile Arduino EEPROM memory.**
 
