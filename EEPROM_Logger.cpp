@@ -194,7 +194,7 @@ void EEPROM_Logger::printAllLogs() {
   for (int i = 0; i < _maxLogNumber; i++) {
     LogStruct structFromFunction;
     structFromFunction = readLog(i);
-    String errorCode[] = { "n.a.", "reset", "shortTimeout", "longTimeout", "shutDown" };
+    String errorCode[] = { "n.a.", "reset", "shortTimeout", "longTimeout", "shutDown", "magazineEmpty" };
     Serial.print("Zaehlerstand: ");
     Serial.print(structFromFunction.logCycleNumber);
     Serial.print("  Zeit: ");
