@@ -20,7 +20,7 @@
 #include "Arduino.h"
 #include <EEPROM_Counter.h>
 
-static EEPROM_Counter eepromCounter;
+static EEPROM_Counter eepromLoggerCounter;
 
 class EEPROM_Logger {
 
