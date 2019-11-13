@@ -137,7 +137,7 @@ EEPROM_Logger::LogStruct EEPROM_Logger::readLog(int logNumber) {
   long mergedTimeAndCode = eepromLoggerCounter.getValue(currentCounterAddress);
 
   // UNMERGE THE VALUES:
-  int cycleTime = unmergeTime(mergedTimeAndCode);
+  long cycleTime = unmergeTime(mergedTimeAndCode);
   int errorCode = unmergeErrorCode(mergedTimeAndCode);
 
   // ASSIGN THE VALUES TO THE LOG STRUCT:
